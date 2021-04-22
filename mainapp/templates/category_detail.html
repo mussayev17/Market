@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load search_filter %}
+{% load static %}
+
+{% block productfilter %}
+<link href="{% static 'css/styles.css'%}" rel="stylesheet">
+
+
+      <form class="d-flex mt-3" action="{% url 'category_detail' slug=category.slug %}" method="GET">
+        <input class="form-control me-2" name="search" type="search" placeholder="Поиск товара" aria-label="Search">
+        <button class="btn rounded-pill  text-dark  btn-outline-primary "  type="submit">Поиск</button>
+      </form>
+    <hr>
+ <div class="dropdown">
+  <button class="btn  rounded-pill text-dark  dropdown-toggle" style="background-color:darkseagreen;" id="btn1" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+    Характеристики
+  </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1"><form action="{% url 'category_detail' slug=category.slug %}"  method="GET">
+     
+        {{ category|product_spec }}
+    <p class="text-center">
+        <button class="btn  text-dark rounded-pill btn-outline-primary"  id="btn1" type="submit">Поиск</button>
+        <button class="btn text-dark rounded-pill btn-outline-imfo"  id="btn1" type="submit">Сбросить</button>
+    </p>
+    </form>
+</div>
+
+{% endblock productfilter %}
+{% block content %}
+
+    <nav aria-label="breadcrumb" class="mt-5">
+      <ol class="breadcrumb" >
+        <li class="breadcrumb-item"><a href="{% url 'base' %}" id="a1" >Главная</a></li>
+        <li class="breadcrumb-item active" id="a1">{{ category.name }} </li>
+      </ol>
+    </nav>
+
+<div class="row mt-5">
+          {% for product in category_products %}
+          <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100">
+              <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}" alt=""></a>
+              <div class="card-body">
+                <h4 class="card-title">
+                  <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+                </h4>
+                <h5 class="price">{{ product.price }} руб.</h5>
+                <a href="{% url 'add_to_cart' slug=product.slug %}">
+                  <button class="btn btn-danger text-dark  rounded-pill  btn-sm" >Добавить в корзину</button>
+                </a>
+              </div>
+            </div>
+          </div>
+  {% endfor %}
+</div>
+</div>
+</div>
+{% endblock content %}

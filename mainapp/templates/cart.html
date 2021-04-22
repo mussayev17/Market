@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h3 class="text-center mt-5 mb-5">Ваша корзина
+ {% if not cart.products.count %}<span>пуста</span>{% endif %}</h3>
+
+{% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>{{ message }}</strong>
+        <button type="button btn-sm" class="close"  id="btn1" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true"></span>
+        </button>
+      </div>
+    {% endfor %}
+{% endif %}
+{% if cart.products.count %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Наименование</th>
+      <th scope="col">Изображение</th>
+      <th scope="col">Цена</th>
+      <th scope="col">Кол-во</th>
+      <th scope="col">Общая цена</th>
+      <th scope="col">Действие</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in cart.products.all %}
+        <tr>
+          <th id="btn_cart1" scope="row">{{ item.product.title }}</th>
+          <td class="w-25"><img src="{{ item.product.image.url }}" class="img-fluid"></td>
+          <td id="btn_cart1">{{ item.content_object.price }} руб.</td>
+          <td>
+            <form action="{% url 'change_qty' slug=item.product.slug %}" method="POST">
+              {% csrf_token %}
+              <input type="number" class="form-control" name="qty" style="width: 70px;" min="1" value="{{ item.qty }}">
+              <br>
+              <input type="submit" class="btn btn-primary rounded-pill btn-sm"  id="btn1" value="Изменить кол-во">
+            </form>
+          </td>
+            <td id="btn_cart">{{ item.final_price }} руб.</td>
+          <td id="btn_cart">
+          
+            <a href="{% url 'delete_from_cart' slug=item.product.slug %}" ><span><button class="btn btn-danger rounded-pill  btn-sm" id="btn1" >Удалить из корзины</button></span></a>
+          </td>
+        </tr>
+    {% endfor %}
+        <tr>
+          <td colspan="2"></td>
+          <td>Итого:</td>
+          <td>{{ cart.total_products }}</td>
+          <td><strong>{{ cart.final_price }} руб.</strong></td>
+          <td><a href="{% url 'checkout' %}"><span><button class="btn btn-primary rounded-pill btn-sm" id="btn1">Перейти к оформлению</button></a></span></td>
+        </tr>
+  </tbody>
+</table>
+{% endif %}
+{% endblock content %}

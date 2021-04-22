@@ -1,0 +1,97 @@
+pip install virtualenv
+virtualenv -p python3 
+venv\Scripts\activate
+
+
+Linux:
+pip install virtualenv
+pip -m venv myvenv
+source myvenv/bin/activate
+python3 -m pip install --upgrade pip
+
+
+
+
+Test: python3 manage.py test
+
+mussayev17 mussayevr007@gmail.com mussayev17
+pip3 install -r requirements.txt
+python manage.py startapp shop_app
+Run the django project run this   ./manage.py runserver
+django-admin startproject market
+python manage.py createsuperuser
+source myvenv/bin/activate
+pip3  install psycopg2
+psql postgres
+
+POSTGRES 
+sudo -u postgres createuser mussayev
+CREATE DATABASE market_shop_db;
+CREATE USER mussayev17 WITH PASSWORD 'mussayev14';
+create user mussayev17 with encrypted password 'mussayev14';
+grant all privileges on database market_shop_db to mussayev17;
+
+psql -h 127.0.0.1 -p 5432 -U mussayev17 market_shop_db
+\pset format aligned
+SELECT version();
+
+Fondy 
+
+astrowolv14 mussayev17 new_super
+mussayev17 mussayev14password market_shop_db
+
+mussayev17 ramazan1717@ superuser
+
+class ProductFeatures(models.Model):
+    
+    RADIO = 'radio'
+    CHECKBOX = 'checkbox'## Выбор необх.характюдля админа
+
+    FILTER_TYPE_CHOICES = {
+        (RADIO,'Радиокнопка'),
+        (CHECKBOX, 'Чекбокс')
+    }    
+    feature_key = models.CharField(max_length=100,verbose_name='Ключ характеристики')
+    feature_name = models.CharField(max_length=255,verbose_name='Наименование характеристики')
+    category = models.ForeignKey(Category, verbose_name='Категоии',on_delete=models.CASCADE)
+    postfix_for_value = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        verbose_name='Постфикс для значения',
+        help_text=f'Например для характеристики "Часы работы" к'
+        f' значению можно добавить постфикс "часов", и как результат - значение "10 часов"'
+    )
+    use_in_filter = models.BooleanField(
+        default=False,
+        verbose_name='Использовать в фильтрации товаров в шаблоне'
+    )
+    filter_type = models.CharField(
+        max_length=20,
+        verbose_name='Тип фильтра',
+        default = CHECKBOX,
+        choices=FILTER_TYPE_CHOICES
+    )
+    filter_measure = models.CharField(
+        max_length=50,
+        verbose_name='Единица измерения для фильтров',
+        help_text = 'Единица измерения для конкретного фильтра. Например "Частота процессора (Ghz).'
+        'Единицей измерения будет информация в скобках.'
+    )
+    def __str__(self):
+        return f'Категории - "{self.category.name}"| Характеристика -"{self.feature_name}"'
+    
+class ProductFeatureValidators(models.Model):
+
+    category = models.ForeignKey(Category, verbose_name='Категори', on_delete=models.CASCADE)
+    feature = models.ForeignKey(
+        ProductFeatures, verbose_name='Характеристика', null=True, blank=True, on_delete=models.CASCADE)
+    feature_value = models.CharField(
+        max_length=255, unique=True, null=True, verbose_name='Значение характеристики')
+
+    def __str__(self):
+        if not self.feature:
+            return f'Валидатор категории "{self.category.name}" - характеристика не выбрана'
+        return f'Валидатор категории "{self.category.name}" |' \
+               f'Характеристика - "{self.feature.feature_name}" | ' \
+                   f'Значение "{self.feature_value}" '
